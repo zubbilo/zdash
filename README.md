@@ -7,14 +7,16 @@ Dashboard For Zabbix
 
 # ZabbixAPI Used
 
-*Metadata-Version: 1.0\n
+```
+Metadata-Version: 1.0<br>
 Name: zabbix-api
 Version: 0.1
 Summary: Zabbix API
 Home-page: https://github.com/gescheit/scripts
 Author: Aleksandr Balezin
 Author-email: gescheit@list.ru
-License: GNU LGPL 2.1*
+License: GNU LGPL 2.1
+```
 
 # ENGLISH
 
