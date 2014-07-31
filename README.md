@@ -3,7 +3,7 @@ zdash
 
 Dashboard For Zabbix
 
-![alt tag](https://github.com/zubbilo/zdash/doc/Zabbix_2.2_zdash.png)
+![zdash](https://raw.githubusercontent.com/zubbilo/zdash/master/doc/Zabbix_2.2_zdash.png)
 
 # ZabbixAPI Used
 
