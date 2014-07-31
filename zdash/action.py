@@ -83,7 +83,7 @@ def alarms():
 	    if len(g['lastEvent'])>0:
 		eventid=int(g['lastEvent']['eventid'])
 	    ack = "None"
-	    ack_duration = DELAY['forhalfyear']+600
+	    ack_duration = DELAY['forhalfyear:']+600
 	    ack_author = "Last comment"
 
 # Gathering ACK parameters (ack_duration, ack_author, ack) for acnowledged triggers
