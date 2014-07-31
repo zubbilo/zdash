@@ -5,10 +5,10 @@ Dashboard For Zabbix
 
 ![zdash](https://raw.githubusercontent.com/zubbilo/zdash/master/doc/Zabbix_2.2_zdash.png)
 
-# ZabbixAPI Used
+# Python ZabbixAPI Used
 
 ```
-Metadata-Version: 1.0<br>
+Metadata-Version: 1.0
 Name: zabbix-api
 Version: 0.1
 Summary: Zabbix API
@@ -18,7 +18,7 @@ Author-email: gescheit@list.ru
 License: GNU LGPL 2.1
 ```
 
-# ENGLISH
+# Description on ENGLISH
 
 Dashboard for Zabbix on Python + ZabbixAPI 0.1
 
@@ -35,7 +35,7 @@ UTF-8 encoding used on ack_message, ack_author, trigger_comment, trigger_descrip
 Supported on Zabbix SRV 2.2+
 (Zabbix SRV 2.0+ can be supported after some modifications in API requests)
 
-# РУССКИЙ
+# Описание на РУССКОМ
 
 Панель для Zabbix на Python + ZabbixAPI 0.1
 
