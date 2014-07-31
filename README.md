@@ -20,7 +20,7 @@ License: GNU LGPL 2.1
 
 # AUTHORS
 
-Sergey Suglobov
+Sergey Suglobov <s.suglobov@gmail.com>
 
 Egor Minko
 
