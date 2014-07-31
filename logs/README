@@ -1,0 +1,2 @@
+Please check rights on logs directory.
+And change to user running your HTTP server, or FCGI daemon.
