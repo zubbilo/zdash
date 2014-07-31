@@ -18,6 +18,12 @@ Author-email: gescheit@list.ru
 License: GNU LGPL 2.1
 ```
 
+# AUTHORS
+
+Sergey Suglobov
+
+Egor Minko
+
 # Description on ENGLISH
 
 Dashboard for Zabbix on Python + ZabbixAPI 0.1
