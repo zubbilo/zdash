@@ -7,7 +7,7 @@ Dashboard For Zabbix
 
 # ZabbixAPI Used
 
-*Metadata-Version: 1.0
+*Metadata-Version: 1.0\n
 Name: zabbix-api
 Version: 0.1
 Summary: Zabbix API
