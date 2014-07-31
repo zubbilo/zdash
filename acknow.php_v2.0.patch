@@ -1,0 +1,56 @@
+--- acknow.php_bkp	2013-02-12 13:27:25.000000000 +0200
++++ acknow.php	2014-07-07 10:58:38.000000000 +0300
+@@ -1,7 +1,7 @@
+ <?php
+ /*
+ ** Zabbix
+-** Copyright (C) 2000-2011 Zabbix SIA
++** Copyright (C) 2001-2013 Zabbix SIA
+ **
+ ** This program is free software; you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+@@ -10,7 +10,7 @@
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+@@ -43,6 +43,7 @@
+ 	'screenid' =>		array(T_ZBX_INT, O_OPT,	P_SYS,	DB_ID,		null),
+ 	'events' =>			array(T_ZBX_INT, O_OPT,	P_SYS,	DB_ID,		null),
+ 	'message' =>		array(T_ZBX_STR, O_OPT,	null,	$bulk ? null : NOT_EMPTY, 'isset({save})||isset({saveandreturn})'),
++        'delay_for' =>          array(T_ZBX_STR, O_OPT, null,   null,           null),
+ 	'backurl' =>		array(T_ZBX_STR, O_OPT,	null,	null,		null),
+ 	// actions
+ 	'go' =>				array(T_ZBX_STR, O_OPT, P_SYS|P_ACT, null,	null),
+@@ -112,7 +113,8 @@
+ 
+ 	$eventsData = array(
+ 		'eventids' => zbx_objectValues($_REQUEST['events'], 'eventid'),
+-		'message' => $_REQUEST['message']
++#		'message' => $_REQUEST['message']
++		'message' => $_REQUEST['delay_for']." ".$_REQUEST['message']
+ 	);
+ 	$result = API::Event()->acknowledge($eventsData);
+ 
+@@ -205,6 +207,17 @@
+ 	}
+ }
+ 
++// Delay FOR
++$DelayS1 = new CRadioButtonList('delay_for');
++$DelayS1->makeVertical();
++$DelayS1->addValue(_('Hour'), '', true);
++$DelayS1->addValue(_('Day'), 'forday: ');
++$DelayS1->addValue(_('Month'), 'formonth: ');
++$DelayS1->addValue(_('Quarter'), 'forquarter: ');
++$DelayS1->addValue(_('Half Year'), 'forhalfyear: ');
++$frmMsg->addRow(_('Comment valid time'), new CDiv($DelayS1, 'border_dotted ui-corner-all'), 'uniqList');
++
++
+ $frmMsg->addRow(_('Message'), new CTextArea('message', '', array('rows' => ZBX_TEXTAREA_STANDARD_ROWS, 'width' => ZBX_TEXTAREA_BIG_WIDTH, 'maxlength' => 255)));
+ $frmMsg->addItemToBottomRow(new CSubmit('saveandreturn', $btn_txt2));
+ if (!$bulk) {

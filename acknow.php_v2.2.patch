@@ -1,0 +1,37 @@
+--- acknow.php_bkp	2014-06-23 17:13:00.000000000 +0300
++++ acknow.php	2014-07-15 18:04:19.000000000 +0300
+@@ -43,6 +43,7 @@
+ 	'screenid' =>		array(T_ZBX_INT, O_OPT, P_SYS,	DB_ID,		null),
+ 	'events' =>			array(T_ZBX_INT, O_OPT, P_SYS,	DB_ID,		null),
+ 	'message' =>		array(T_ZBX_STR, O_OPT, null,	$bulk ? null : NOT_EMPTY, 'isset({save})||isset({saveandreturn})'),
++        'delay_for' =>          array(T_ZBX_STR, O_OPT, null,   null,           null),
+ 	'backurl' =>		array(T_ZBX_STR, O_OPT, null,	null,		null),
+ 	// actions
+ 	'go' =>				array(T_ZBX_STR, O_OPT, P_SYS|P_ACT, null,	null),
+@@ -150,7 +151,8 @@
+ 
+ 	$acknowledgeEvent = API::Event()->acknowledge(array(
+ 		'eventids' => zbx_objectValues($_REQUEST['events'], 'eventid'),
+-		'message' => $_REQUEST['message']
++#		'message' => $_REQUEST['message']
++		'message' => $_REQUEST['delay_for']." ".$_REQUEST['message']
+ 	));
+ 
+ 	show_messages($acknowledgeEvent, _('Event acknowledged'), _('Cannot acknowledge event'));
+@@ -265,6 +267,16 @@
+ ));
+ $message->attr('autofocus', 'autofocus');
+ 
++// Delay FOR
++$DelayS1 = new CRadioButtonList('delay_for');
++$DelayS1->makeVertical();
++$DelayS1->addValue(_('Hour'), '', true);
++$DelayS1->addValue(_('Day'), 'forday: ');
++$DelayS1->addValue(_('Month'), 'formonth: ');
++$DelayS1->addValue(_('Quarter'), 'forquarter: ');
++$DelayS1->addValue(_('Half Year'), 'forhalfyear: ');
++$messageTable->addRow(_('Comment valid time'), new CDiv($DelayS1, 'border_dotted ui-corner-all'), 'uniqList');
++
+ $messageTable->addRow(_('Message'), $message);
+ $messageTable->addItemToBottomRow(new CSubmit('saveandreturn', $saveAndReturnLabel));
+ 

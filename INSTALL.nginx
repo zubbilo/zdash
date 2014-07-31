@@ -1,7 +1,7 @@
 # NGINX CONFIG:
 server {
     listen 80;
-    server_name zdash.synchron.com.ua;
+    server_name zdash.your.domain;
     access_log /var/log/nginx/zdash-access.log;
     error_log /var/log/nginx/zdash-error.log;
     root   /var/www/zdash;
