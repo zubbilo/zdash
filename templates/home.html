@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+ <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="refresh" content="30" />
+
+    <title>Zabbix Alarms Dashboard</title>
+	
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
+
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/django.ajax.messages.js"></script>
+
+    <style>
+	html {
+	    height: 100%;
+	}
+	body {
+	    min-height: 100%;
+	    position: absolute;
+      	    top:0; bottom:0;
+      	    left:0; right:0;
+	}
+	.navbar {
+	    min-height: 36px;
+	    border: 0px solid #8B1A1A;
+	    border-bottom-width: 4px;
+	}
+	.container {
+	    height: 90%;
+	    width: 100%;
+	}
+	h2 { margin: 0px; }
+	.hero {
+	    margin: 2px;
+	    background-color: #eeeeee;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 10px 10px;
+            -webkit-box-shadow: 0 0px 6px rgba(0, 0, 0, 0.7);
+                    box-shadow: 0 0px 6px rgba(0, 0, 0, 0.7);
+	}
+	.hero-danger {
+	    border-color: #8B1A1A;
+	}
+        .hero-problem {
+            border-color: #FF4040;
+        }
+        .hero-average {
+            border-color: #FF8C00;
+        }
+
+    </style>
+	
+ </head>
+
+ <body>
+      <div class="navbar navbar-default">
+	  <div class="container">
+	
+            <div class="row">
+            	<div class="col-xs-12 col-sm-12">
+                    <h4><p class="text-center text-danger">Zabbix Alarms Dashboard</p></h4>
+            	</div>
+            </div>
+
+	  </div>
+
+      </div><!--/END NAVBAR-->
+
+      <div class="container">
+
+	 <div class="row">
+
+		<div class="col-xs-8 col-sm-8 col-md-8 col-sm-offset-2 col-xs-offset-2 col-md-offset-2">
+
+	        <!--Alert section-->
+		{% if messages %}
+		<div class="alert alert-danger">
+		    {% for message in messages %}
+		    <strong>ERROR!</strong> {{ message }}
+		    {% endfor %}
+		</div>
+		{% endif %}
+		<!--/Alert-->
+
+		</div>
+	</div>
+
+	<div class="row">
+                  <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="panel panel-danger">
+			<div class="panel-body" style="background-color: #f2dede">
+                            {%for alarm in alarms%}
+                                {%if alarm.status == 5%}
+
+                                <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+				 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 hero hero-danger">
+                                  <h4>{{alarm.name}} ({{alarm.address}})</h4>
+				   {%if alarm.fulllabel|length == 1%}
+                                      {% for label in alarm.fulllabel %}
+                                        {%if label.4 != 0 %}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}"><a class=ackhref href="{{ZABBIX_URL}}/acknow.php?eventid={{label.4}}&triggerid={{label.3}}&backurl={{ZDASH_URL}}">{{label.0}}</a></span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%else%}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}">{{label.0}}</span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%endif%}
+                                      {% endfor %}
+				   {%elif alarm.fulllabel|length > 6%}
+				      <p class="text-danger"><b>MORE 6 HIGH PROBLEM!</b> <span class="pull-right label label-primary">{{label.1}}</span></p>
+				   {%else%}
+   			 	      {% for label in alarm.fulllabel %}
+                                        {%if label.4 != 0 %}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}"><a class=ackhref href="{{ZABBIX_URL}}/acknow.php?eventid={{label.4}}&triggerid={{label.3}}&backurl={{ZDASH_URL}}">{{label.0}}</a></span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%else%}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}">{{label.0}}</span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%endif%}
+			  	      {% endfor %}
+				   {%endif%}
+                                </div>
+				</div>
+
+                                {%elif alarm.status == 4%}
+
+                                <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+				 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 hero hero-problem">
+                                  <h4>{{alarm.name}} ({{alarm.address}})</h4>
+                                   {%if alarm.fulllabel|length == 1%}
+                                      {% for label in alarm.fulllabel %}
+                                        {%if label.4 != 0 %}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}"><a class=ackhref href="{{ZABBIX_URL}}/acknow.php?eventid={{label.4}}&triggerid={{label.3}}&backurl={{ZDASH_URL}}">{{label.0}}</a></span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%else%}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}">{{label.0}}</span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%endif%}
+                                      {% endfor %}
+				   {%elif alarm.fulllabel|length > 6%}
+				      <p class="text-danger"><b>MORE 6 HIGH PROBLEM!</b> <span class="pull-right label label-primary">{{label.1}}</span></p>
+                                   {%else%}
+                                      {% for label in alarm.fulllabel %}
+                                        {%if label.4 != 0 %}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}"><a class=ackhref href="{{ZABBIX_URL}}/acknow.php?eventid={{label.4}}&triggerid={{label.3}}&backurl={{ZDASH_URL}}">{{label.0}}</a></span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%else%}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}">{{label.0}}</span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%endif%}
+                                      {% endfor %}
+                                   {%endif%}
+				 </div>
+                                </div>
+
+                                {%endif%}
+                            {%endfor%}
+                        </div>
+                    </div>
+                  </div>
+	</div>
+	<div class="row">
+
+                  <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="panel panel-warning">
+                        <div class="panel-body" style="background-color: #fcf8e3">
+                            {%for alarm in alarms%}
+                                {%if alarm.status == 3%}
+
+                                <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+                                 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 hero hero-average">
+                                  <h4>{{alarm.name}} ({{alarm.address}})</h4>
+                                   {%if alarm.fulllabel|length == 1%}
+                                      {% for label in alarm.fulllabel %}
+                                        {%if label.4 != 0 %}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}"><a class=ackhref href="{{ZABBIX_URL}}/acknow.php?eventid={{label.4}}&triggerid={{label.3}}&backurl={{ZDASH_URL}}">{{label.0}}</a></span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%else%}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}">{{label.0}}</span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%endif%}
+                                      {% endfor %}
+				   {%elif alarm.fulllabel|length > 6%}
+				      <p class="text-danger">MORE 6 AVERAGE PROBLEM! <span class="pull-right label label-primary">{{label.1}}</span></p>
+                                   {%else%}
+                                      {% for label in alarm.fulllabel %}
+                                        {%if label.4 != 0 %}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}"><a class=ackhref href="{{ZABBIX_URL}}/acknow.php?eventid={{label.4}}&triggerid={{label.3}}&backurl={{ZDASH_URL}}">{{label.0}}</a></span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%else%}
+					    <p class=trigger><span class="hint" data-hint="{{label.2}}"><img src="{{STATIC_URL}}img/info.png"></span><span class="acklink" data-title="{{label.6}}: {{label.5}}">{{label.0}}</span> <span class="pull-right label label-primary">{{label.1}}</span></p>
+					{%endif%}
+                                      {% endfor %}
+                                   {%endif%}
+				 </div>
+                                </div>
+		
+                                {%endif%}
+                            {%endfor%}
+                        </div>
+                    </div>
+                  </div>
+	</div>
+
+      </div><!--/CONTAINER-->
+
+      <script>
+
+	function Func(interval) {
+		$.post('{%url home%}',{interval:interval},function(data){
+                       addMessage(data['messages'][0]['message'], data['messages'][0]['tags']);
+		});
+	}	
+      </script>
+
+ </body>
+</html>
