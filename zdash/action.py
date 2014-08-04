@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from zabbix_api import ZabbixAPI
-from zdash.settings import ZABBIX, logger, DELAY
+from zdash.settings import ZABBIX, logger
 
 import time
 import re
@@ -9,6 +9,13 @@ WARNING = 2
 AVERAGE = 3
 PROBLEM = 4
 DISASTER = 5
+
+DELAY = {
+	"forday:":79200,
+	"formonth:":2505600,
+	"forquarter:":7603000,
+	"forhalfyear:":15700000,
+	}
 
 def api_connect():
     """Connect to Zabbix API"""
@@ -40,6 +47,7 @@ def alarms():
 			     "filter":{ "value": "1" },
 			     "maintenance":"false",
 			     "skipDependent":"true",
+			     
 			    })
 
 # Filtering TrigerIDs list, based on GroupNames: ALL_servers, ALL_routers, ALL_etc...
@@ -83,7 +91,7 @@ def alarms():
 	    if len(g['lastEvent'])>0:
 		eventid=int(g['lastEvent']['eventid'])
 	    ack = "None"
-	    ack_duration = DELAY['forhalfyear:']+600
+	    ack_duration = 15800000
 	    ack_author = "Last comment"
 
 # Gathering ACK parameters (ack_duration, ack_author, ack) for acnowledged triggers
@@ -122,7 +130,8 @@ def alarms():
         hiid = c.host.get({ "output": "extend",
 			    "selectInterfaces":"extend",
 			    "selectMacros":"extend",
-			    "hostids": data.keys()
+			    "hostids": data.keys(),
+			    "selectParentTemplates":"extend"
 			})
 
 # Building BASIC defmacro[] list for substituting strings in [hostid][2], [hostid][3]
@@ -137,10 +146,22 @@ def alarms():
 		defmacro.append({'macro':'{HOST.DNS}','value':hi['interfaces'][0]['dns']})
 	    else:
 		data[hi['hostid']].append('unknown')
+	    templates=[]
+	    if len(hi['parentTemplates'])>0:
+		templates=[t['templateid'] for t in hi['parentTemplates']]
 
 # Merging BASIC defmacros and host.macroses
 	    if len(hi['macros'])>0:
 		defmacro=defmacro+hi['macros']
+
+# Get TEMPLATEs information (MACROSes)
+	    tmac = c.template.get({ "selectMacros":"extend",
+				    "templateids": templates,
+				 })
+	    for mac in tmac:
+#		logger.info("Got Template info: %s" %(mac))
+		if len(mac['macros'])>0:
+		    defmacro=defmacro+mac['macros']
 
 # Substituting MACROSes names to MACROSes values in strings of [hostid][2], [hostid][3]
 	    for ma in defmacro:
