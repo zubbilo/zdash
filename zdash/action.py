@@ -114,17 +114,15 @@ def alarms():
 # Template of data[]:
 # [hostid][0]=str(Name)
 # [hostid][1]=int(priority)
-# [hostid][2]=[str(trigger.name):40, int(trigger.utime)] - name stripped to 40 chars
-# [hostid][3]=[str(trigger.name), int(trigger.utime), str(trigger.comment), int(triggerid), int(eventid), str(acnowledge.ack), str(acknowledge.author)]
+# [hostid][2]=[str(trigger.name), int(trigger.utime), str(trigger.comment), int(triggerid), int(eventid), str(acnowledge.ack), str(acknowledge.author)]
 
 	    if display:
 		if data.has_key(g['hosts'][0]['hostid']):
 		    if int(g['priority']) > int(data[g['hosts'][0]['hostid']][1]):
 			data[g['hosts'][0]['hostid']][1] = g['priority']
-		    data[g['hosts'][0]['hostid']][2].append([str(g['description'])[:40],str(utime)])
-		    data[g['hosts'][0]['hostid']][3].append([str(g['description']),str(utime),str(comment),int(g['triggerid']),int(eventid),str(ack),str(ack_author)])
+		    data[g['hosts'][0]['hostid']][2].append([str(g['description'])[:55],str(utime),str(comment),int(g['triggerid']),int(eventid),str(ack),str(ack_author)])
 		else:
-		    data[g['hosts'][0]['hostid']] = [g['hosts'][0]['host'],g['priority'],[[str(g['description'])[:40],str(utime)]],[[g['description'],str(utime),str(comment),int(g['triggerid']),int(eventid),str(ack),str(ack_author)]]]
+		    data[g['hosts'][0]['hostid']] = [g['hosts'][0]['host'],g['priority'],[[str(g['description'])[:55],str(utime),str(comment),int(g['triggerid']),int(eventid),str(ack),str(ack_author)]]]
 
 # Get HOST information (IP-addresses, MACROSes)
         hiid = c.host.get({ "output": "extend",
@@ -163,17 +161,13 @@ def alarms():
 		if len(mac['macros'])>0:
 		    defmacro=defmacro+mac['macros']
 
-# Substituting MACROSes names to MACROSes values in strings of [hostid][2], [hostid][3]
+# Substituting MACROSes names to MACROSes values in strings of [hostid][2]
 	    for ma in defmacro:
 #		logger.info("MACROS full data: %s" %(ma))
 		i=0
-		for k in data[hi['hostid']][3]:
-		    data[hi['hostid']][3][i][0] = k[0].replace(ma['macro'],ma['value'])
-		    data[hi['hostid']][3][i][2] = k[2].replace(ma['macro'].encode('utf-8'),str(ma['value'].encode('utf-8')))
-		    i=i+1
-		i=0
 		for k in data[hi['hostid']][2]:
 		    data[hi['hostid']][2][i][0] = k[0].replace(ma['macro'],ma['value'])
+		    data[hi['hostid']][2][i][2] = k[2].replace(ma['macro'].encode('utf-8'),str(ma['value'].encode('utf-8')))
 		    i=i+1
 
 # Logging result var before rendering
@@ -183,9 +177,8 @@ def alarms():
 	for trigger in data:
 	    result = {}
 	    result['name'] = data[trigger][0]
-	    result['label'] = data[trigger][2]
-	    result['fulllabel'] = data[trigger][3]
-	    result['address'] = data[trigger][4]
+	    result['fulllabel'] = data[trigger][2]
+	    result['address'] = data[trigger][3]
 # Calc status
 	    states = int(data[trigger][1])
 	    result['status'] = states

@@ -34,7 +34,7 @@ Additional functional - acnowledge's default lifetime is 3600 sec after submitti
 
 No need to login to Zabbix GUI to access Dashboard. But not for acnowledging problem.
 
-Macroses host-level resolving. Macroses template-level NOT!
+Macroses host-level resolving. Macroses template-level resolving!
 
 UTF-8 encoding used on ack_message, ack_author, trigger_comment, trigger_description.
 
@@ -51,7 +51,7 @@ Supported on Zabbix SRV 2.2+
 
 Логин в Zabbix для просмотра текущих сработавших триггеров не требуется, но для выставления комментария (acknowledge) - требуется.
 
-Макросы уровня узла резолвятся нормально. Уровня шаблона - не было необходимости, поэтому - нет.
+Макросы уровня узла резолвятся нормально. Уровня шаблона тоже.
 
 Русский язык поддерживается.
 

@@ -307,7 +307,7 @@ html {
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.4;
   color: #333333;
   background-color: #ffffff;
   background: url("../img/greyzz.png") repeat scroll 0% 0% transparent;
@@ -7117,6 +7117,7 @@ td.visible-print {
 .ackhref {
     text-decoration:none;
     color: black !important;
+    line-height: 1.35;
 }
 
 .acklink:hover::after {
