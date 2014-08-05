@@ -47,16 +47,18 @@ def alarms():
 			     "filter":{ "value": "1" },
 			     "maintenance":"false",
 			     "skipDependent":"true",
-			     
 			    })
 
-# Filtering TrigerIDs list, based on GroupNames: ALL_servers, ALL_routers, ALL_etc...
 	for g in ahid:
 #	    logger.info("TRIGGER full data: %s" %(g))
-	    if g['groups']:
-		groups = [grp['name'] for grp in g['groups']]
-		selectedgrp = [grp for grp in groups if grp.startswith('ALL')]
-		if len(selectedgrp) == 0: continue
+
+# Example of filtering TrigerIDs list, based on GroupNames: ALL_servers, ALL_routers, ALL_etc...
+# Feel free to write here Your own filter.
+#	    if g['groups']:
+#		groups = [grp['name'] for grp in g['groups']]
+#		selectedgrp = [grp for grp in groups if grp.startswith('ALL')]
+#		if len(selectedgrp) == 0: continue
+
 # Building LastEventIDs for Acknowledges selection on this events
 	    if len(g['lastEvent'])>0:
 		evts.append(g['lastEvent']['eventid'])
@@ -72,13 +74,15 @@ def alarms():
 			"limit": 20
 			})
 
-# Filtering TrigerIDs list, based on GroupNames: ALL_servers, ALL_routers, ALL_etc...
 # START building DATA from Triggers + Events + ACKs
 	for g in ahid:
-	    if g['groups']:
-		groups = [grp['name'] for grp in g['groups']]
-		selectedgrp = [grp for grp in groups if grp.startswith('ALL')]
-		if len(selectedgrp) == 0: continue
+
+# Example of filtering TrigerIDs list, based on GroupNames: ALL_servers, ALL_routers, ALL_etc...
+# Feel free to write here Your own filter.
+#	    if g['groups']:
+#		groups = [grp['name'] for grp in g['groups']]
+#		selectedgrp = [grp for grp in groups if grp.startswith('ALL')]
+#		if len(selectedgrp) == 0: continue
 
 # Problem Duration
 	    utime = problem_duration(time.strftime("%d %b %Y %H:%M:%S", time.localtime(int(g['lastchange']))))
@@ -114,7 +118,7 @@ def alarms():
 # Template of data[]:
 # [hostid][0]=str(Name)
 # [hostid][1]=int(priority)
-# [hostid][2]=[str(trigger.name), int(trigger.utime), str(trigger.comment), int(triggerid), int(eventid), str(acnowledge.ack), str(acknowledge.author)]
+# [hostid][2]=[str(trigger.name)[:55], int(trigger.utime), str(trigger.comment), int(triggerid), int(eventid), str(acnowledge.ack), str(acknowledge.author)]
 
 	    if display:
 		if data.has_key(g['hosts'][0]['hostid']):
