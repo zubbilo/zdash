@@ -1,0 +1,40 @@
+#!!!!!!!!!!!!!!! => NOT CHECKED YET <= !!!!!!!!!!!!!!!!
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# this is only theory of configuration:
+
+# APACHE CONFIG:
+<VirtualHost zdash.your.domain:80>
+
+ServerAdmin webmaster@localhost
+DocumentRoot /var/www/zdash
+
+#================== PYTHON
+WSGIDaemonProcess zdash.your.domain user=www-data group=www-data processes=2 threads=2
+WSGIProcessGroup zdash.your.domain
+WSGIScriptAlias / /var/www/zdash/django.wsgi
+#=========================
+
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+</Directory>
+
+<Directory /var/www/zdash>
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+
+Alias /static/ /var/www/zdash/static/
+
+<Directory /var/www/zdash/static>
+    Order deny,allow
+    Allow from all
+</Directory>
+
+
+ErrorLog ${APACHE_LOG_DIR}/zdash-error.log
+LogLevel warn
+CustomLog ${APACHE_LOG_DIR}/zdash-access.log combined
+
+</VirtualHost>

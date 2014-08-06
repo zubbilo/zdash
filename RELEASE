@@ -1,0 +1,29 @@
+Zdash ver 1.1 (Egor Minko):
+
+* New: Resolving template-level macroses.
+* Fix: css to get correct arrange of elements
+* New: Patches for Zabbix GUI 2.0, Zabbix GUI 2.2
+* New: Installation manual for nginx
+* New: Installation manual for apache
+* New: Basic Installation manual
+
+Zdash ver 1.0 (Egor Minko):
+
+* New: Resolving host-level macroses
+* New: Resolving basic macroses {HOSTNAME}, {HOST.IP}, {HOST.DNS}
+* Fix: css fixed to get correct utime positioning
+* New: mouseover action for Trigger Description - with author of acknowledgement, and acnowledgement
+* New: mouseover action for Trigger info icon
+* New: info icon for Trigger
+* Upd: changed requests to Zabbix API according to version 2.2
+* New: add link to zabbix GUI acknowledes and backlink to zdash
+* New: Merging 6+ high problems into 1 line "More than 6 HIGH problems"
+
+Zdash ver 0.2 (Sergey Suglobov):
+
+* New: Merging 6+ average problems into 1 line " More than 6 average problems"
+* Upd: Global troubleshooting of the project and building WEB template
+
+Zdash ver 0.1 (Sergey Suglobov):
+
+* Initial development whole project

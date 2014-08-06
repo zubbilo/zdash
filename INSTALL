@@ -1,0 +1,87 @@
+================ Installation ZDASH =================
+
+Mini-howto based on Debian 7+
+
+1a. Download ZDASH (GIT)
+
+mkdir -p /var/www/zdash
+git clone https://github.com/zubbilo/zdash /var/www/zdash
+cd /var/www/zdash
+chmod 777 logs
+chmod a+x reload.sh
+
+1b. Download ZDASH like zip file
+
+wget --no-check-certificate -O /tmp/zdash.zip https://github.com/zubbilo/zdash/archive/master.zip
+unzip /tmp/zdash.zip -d /tmp
+mv /tmp/zdash-master /var/www/zdash
+cd /var/www/zdash
+chmod 777 logs
+chmod a+x reload.sh
+
+2. Configuring ZDASH
+
+All settings are in /var/www/zdash/zdash/settings.py
+
+In most cases You only want to change 3 variables:
+* ZDASH_URL
+* DELAY
+* ZABBIX
+
+3. Installing dependencies
+
+apt-get install python python-django
+
+Install zabbix_api: https://github.com/gescheit/scripts/tree/master/zabbix
+or
+Just copy to zdash path:
+wget --no-check-certificate -O /var/www/zdash/zdash/zabbix_api.py https://raw.githubusercontent.com/gescheit/scripts/master/zabbix/zabbix_api.py
+
+4a. Preparing for HTTP server NGINX
+
+Check contents of INSTALL.nginx file and change as needed.
+Rename this file and copy to Your nginx configuration path, in most cases: /etc/nginx/sites-enabled
+Restart nginx.
+
+Check contents of reload.sh file.
+Remove lines starting with "echo" and "exit". Then modify and uncomment 2 last lines.
+Execute this file. Check the FCGI server works:
+
+ps wax |grep "port=8099"
+
+4b. Preparing for HTTP server APACHE
+
+apt-get install libapache2-mod-wsgi
+a2enmod wsgi
+apache2ctl restart
+
+Check contents of django.fcgi and fix path to zdash.
+
+Check contents of INSTALL.apache file and change as needed.
+Rename this file and copy to Your Apache configuration path, in most cases: /etc/apache2/sites-enabled
+Restart apache.
+
+5. Open browser and follow to http://zdash.your.domain/
+
+==================== ZABBIX GUI PATHES ======================
+
+6. For modifying Zabbix GUI on acknowledge screen You need to apply patch according to Zabbix SRV version:
+
+For Example Zabbix SRV 2.2+:
+# cp acknow.php_v2.2.patch /path/to/zabbix-php-gui/
+# cd /path/to/zabbix-php-gui
+# patch < acknow.php_v2.2.patch
+
+Check Your page:
+http://zabbix.your.domain/acknow.php?eventid=XXXXXX&triggerid=XXXXXX
+
+==================== Additional changes =====================
+
+1. By default all triggers in all groups displaying. To filter by hostgroups check for file actions.py find section:
+
+# Example of filtering TrigerIDs list, based on HostGroupNames: ALL_servers, ALL_routers, ALL_etc...
+# Feel free to write here Your own filter.
+#           if g['groups']:
+#               groups = [grp['name'] for grp in g['groups']]
+#               selectedgrp = [grp for grp in groups if grp.startswith('ALL')]
+#               if len(selectedgrp) == 0: continue
