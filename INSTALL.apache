@@ -1,7 +1,3 @@
-#!!!!!!!!!!!!!!! => NOT CHECKED YET <= !!!!!!!!!!!!!!!!
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# this is only theory of configuration:
-
 # APACHE CONFIG:
 <VirtualHost zdash.your.domain:80>
 
