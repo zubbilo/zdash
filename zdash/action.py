@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from zabbix_api import ZabbixAPI
 from zdash.settings import ZABBIX, logger
+#import traceback
 
 import time
 import re
@@ -63,6 +64,11 @@ def alarms():
 	    if len(g['lastEvent'])>0:
 		evts.append(g['lastEvent']['eventid'])
 
+    except Exception,e:
+	logger.error("Problem while getting Triggers: %s" %(e))
+	raise ZabbixAlarms(e)
+
+    try:
 # Get Acknowledges for TriggerIDs
         heid = c.event.get({
 			"output": "extend",
@@ -100,7 +106,7 @@ def alarms():
 
 # Gathering ACK parameters (ack_duration, ack_author, ack) for acnowledged triggers
 	    for e in heid:
-	        if ( int(e['acknowledged'])==1 and int(e['objectid'])==int(g['triggerid']) ):
+		if ( int(e['acknowledged'])==1 and int(e['objectid'])==int(g['triggerid']) ):
 		    ack = str(e['acknowledges'][0]['message'].encode('utf-8'))
 		    ack_duration = problem_duration_sec(time.strftime("%d %b %Y %H:%M:%S", time.localtime(int(e['acknowledges'][0]['clock']))))
 		    ack_author = str(e['acknowledges'][0]['alias'].encode('utf-8'))
@@ -128,6 +134,11 @@ def alarms():
 		else:
 		    data[g['hosts'][0]['hostid']] = [g['hosts'][0]['host'],g['priority'],[[str(g['description'])[:55],str(utime),str(comment),int(g['triggerid']),int(eventid),str(ack),str(ack_author)]]]
 
+    except Exception,e:
+	logger.error("Problem while building data: %s" %(e))
+	raise ZabbixAlarms(e)
+
+    try:
 # Get HOST information (IP-addresses, MACROSes)
         hiid = c.host.get({ "output": "extend",
 			    "selectInterfaces":"extend",
@@ -140,14 +151,27 @@ def alarms():
         for hi in hiid:
 #	    logger.info("HOSTS full data: %s" %(hi))
 	    defmacro=[{'macro':'{HOSTNAME}', 'value':hi['host']}]
-	    if hi['interfaces'][0]['ip']:
-    	    	data[hi['hostid']].append(hi['interfaces'][0]['ip'])
-		defmacro.append({'macro':'{HOST.IP}','value':hi['interfaces'][0]['ip']})
-	    if hi['interfaces'][0]['dns']:
-		data[hi['hostid']].append(hi['interfaces'][0]['dns'])
-		defmacro.append({'macro':'{HOST.DNS}','value':hi['interfaces'][0]['dns']})
-	    else:
-		data[hi['hostid']].append('unknown')
+	    defmacro.append({'macro':'{HOST.NAME}','value':hi['host']})
+	    data[hi['hostid']].append("")
+	    ipval, dnsval = [], []
+#====>>> FOR Zabbix 2.0
+	    if ZABBIX['version']<2.2:
+		for ikey in hi['interfaces'].keys():
+		    if hi['interfaces'][ikey]['ip']:
+			ipval.append(str(hi['interfaces'][ikey]['ip']))
+		    if hi['interfaces'][ikey]['dns']:
+			dnsval.append(str(hi['interfaces'][ikey]['dns']))
+#====>>> FOR Zabbix 2.2
+	    if ZABBIX['version']>=2.2:
+		for ikey,item in enumerate(hi['interfaces']):
+		    if hi['interfaces'][ikey]['ip']:
+			ipval.append(str(hi['interfaces'][ikey]['ip']))
+		    if hi['interfaces'][ikey]['dns']:
+			dnsval.append(str(hi['interfaces'][ikey]['dns']))
+
+	    data[hi['hostid']][3]=', '.join(ipval+dnsval)
+	    defmacro.append({'macro':'{HOST.IP}','value':str(', '.join(ipval))})
+	    defmacro.append({'macro':'{HOST.DNS}','value':str(', '.join(dnsval))})
 	    templates=[]
 	    if len(hi['parentTemplates'])>0:
 		templates=[t['templateid'] for t in hi['parentTemplates']]
@@ -174,6 +198,11 @@ def alarms():
 		    data[hi['hostid']][2][i][2] = k[2].replace(ma['macro'].encode('utf-8'),str(ma['value'].encode('utf-8')))
 		    i=i+1
 
+    except Exception,e:
+	logger.error("Problem while getting Host data like macroses, IP, DNS, etc..: %s" %(e))
+	raise ZabbixAlarms(e)
+
+    try:
 # Logging result var before rendering
 	logger.info(data)
 
@@ -191,8 +220,8 @@ def alarms():
 	    full_result.append(result)
 
     except Exception,e:
-	logger.error("Error: %s" %(e))
-	raise ZabbixAlarms, e
+	logger.error("Error while preparing final result: %s" %(e))
+	raise ZabbixAlarms(e)
     else:
         return full_result
 
@@ -220,6 +249,8 @@ def problem_duration_sec(date):
     duration = now - start_problem
     return duration
 
-
-class ZabbixAlarms(Exception):pass
-
+class ZabbixAlarms(Exception):
+    def __init__(self, value):
+	self.value = value
+    def __str__(self):
+	return repr(self.value)

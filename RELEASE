@@ -1,3 +1,9 @@
+Zdash ver 1.2 (Egor Minko):
+
+* Upd: changed logger
+* Fix: gathering interfaces info was broken
+* New: Support for Zabbix 2.0 added in settings.
+
 Zdash ver 1.1 (Egor Minko):
 
 * New: Resolving template-level macroses.

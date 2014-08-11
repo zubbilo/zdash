@@ -27,6 +27,7 @@ DELAY = {
 # Zabbix Api Connect (user must have API access)   #
 ####################################################
 ZABBIX = {
+	'version':	2.2, # validated only 2.2 or 2.0
         'url':          'https://zabbix.your.domain',
         'user':         'zabbix-api',
         'pass':         '*!*zabbix_api_password*!*',
