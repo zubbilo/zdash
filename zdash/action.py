@@ -61,7 +61,7 @@ def alarms():
 #		if len(selectedgrp) == 0: continue
 
 # Building LastEventIDs for Acknowledges selection on this events
-	    if len(g['lastEvent'])>0:
+	    if ( len(g['lastEvent'])>0 and len(g['hosts'])>0 ):
 		evts.append(g['lastEvent']['eventid'])
 
     except Exception,e:
@@ -106,6 +106,7 @@ def alarms():
 
 # Gathering ACK parameters (ack_duration, ack_author, ack) for acnowledged triggers
 	    for e in heid:
+#	    	logger.info("EVENT full data: %s" %(e))
 		if ( int(e['acknowledged'])==1 and int(e['objectid'])==int(g['triggerid']) and len(e['acknowledges'])>0):
 		    ack = str(e['acknowledges'][0]['message'].encode('utf-8'))
 		    ack_duration = problem_duration_sec(time.strftime("%d %b %Y %H:%M:%S", time.localtime(int(e['acknowledges'][0]['clock']))))
