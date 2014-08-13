@@ -24,8 +24,8 @@ def api_connect():
     	zapi = ZabbixAPI(server=ZABBIX['url'])
     	zapi.login(ZABBIX['user'], ZABBIX['pass'])
     except Exception,e:
-    	logger.error("Don't login to zabbix server: %s" %(e))
-	raise ZabbixAlarms, "Don't login to zabbix server: %s" %(e)
+    	logger.error("Can't login to zabbix server: %s" %(e))
+	raise ZabbixAlarms, "Can't login to zabbix server: %s" %(e)
     else:
     	return zapi
 
@@ -33,7 +33,7 @@ def alarms():
     try:
         c = api_connect()
     except ZabbixAlarms,e:
-	raise ZabbixAlarms, "Couldn't connect to Zabbix Server! Please contact Zdash administrators."
+	raise ZabbixAlarms, "Unable to connect to Zabbix Server! Please contact Zdash administrators."
 
     data, full_result, evts, hosts, defmacro = {}, [], [], [], []
     try:
@@ -140,7 +140,7 @@ def alarms():
 	raise ZabbixAlarms(e)
 
     try:
-# Get HOST information (IP-addresses, MACROSes)
+# Get HOST information (IP-addresses, MACROSes, Templates)
         hiid = c.host.get({ "output": "extend",
 			    "selectInterfaces":"extend",
 			    "selectMacros":"extend",
@@ -200,7 +200,7 @@ def alarms():
 		    i=i+1
 
     except Exception,e:
-	logger.error("Problem while getting Host data like macroses, IP, DNS, etc..: %s" %(e))
+	logger.error("Problem while getting Host data like Macroses, IP, DNS, etc..: %s" %(e))
 	raise ZabbixAlarms(e)
 
     try:

@@ -20,7 +20,7 @@ License: GNU LGPL 2.1
 
 # AUTHORS
 
-Sergey Suglobov <s.suglobov@gmail.com>
+Sergey Suglobov: <s.suglobov@gmail.com>
 
 Egor Minko
 
@@ -38,8 +38,7 @@ Macroses host-level resolving. Macroses template-level resolving!
 
 UTF-8 encoding used on ack_message, ack_author, trigger_comment, trigger_description.
 
-Supported on Zabbix SRV 2.2+
-(Zabbix SRV 2.0+ can be supported after some modifications in API requests)
+Supported on Zabbix SRV 2.0, Zabbix SRV 2.2
 
 # Описание на РУССКОМ
 
@@ -55,5 +54,8 @@ Supported on Zabbix SRV 2.2+
 
 Русский язык поддерживается.
 
-Совместимость с Zabbix SRV 2.2
-(Zabbix SRV 2.0 может поддерживатся после изменения некоторых запросов к API)
+Совместимость с Zabbix SRV 2.0, Zabbix SRV 2.2
+
+# Patch for Zabbix GUI included
+
+![zabbix-gui-patch](https://raw.githubusercontent.com/zubbilo/zdash/master/doc/Zabbix_GUI_patch.png)
