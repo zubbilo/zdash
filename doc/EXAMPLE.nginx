@@ -1,4 +1,5 @@
-# NGINX CONFIG:
+# Use this CONFIG for  NGINX:
+
 server {
     listen 80;
     server_name zdash.your.domain;

@@ -4,6 +4,7 @@ Zdash ver 1.2 (Egor Minko):
 * Fix: gathering interfaces was broken, but now it collect all available interfaces in 1 line
 * New: Support for Zabbix 2.0 added in settings.py
 * New: Added protection from lost triggers - when trigger has no host-parent.
+* New: Русская документация по установке
 
 Zdash ver 1.1 (Egor Minko):
 

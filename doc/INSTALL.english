@@ -48,7 +48,7 @@ wget --no-check-certificate -O /var/www/zdash/zdash/zabbix_api.py https://raw.gi
 apt-get install nginx-light
 (minimun required nginx-light)
 
-Check contents of INSTALL.nginx file and change as needed.
+Check contents of EXAMPLE.nginx file and change as needed.
 Rename this file and copy to Your nginx configuration path, in most cases: /etc/nginx/sites-enabled
 Restart nginx.
 
@@ -68,7 +68,7 @@ chown -R www-data:www-data /var/www/zdash
 
 Check contents of django.fcgi and fix path to zdash.
 
-Check contents of INSTALL.apache file and change as needed.
+Check contents of EXAMPLE.apache file and change as needed.
 Rename this file and copy to Your Apache configuration path, in most cases: /etc/apache2/sites-enabled
 Restart apache.
 

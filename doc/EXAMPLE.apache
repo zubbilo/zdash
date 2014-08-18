@@ -1,4 +1,5 @@
-# APACHE CONFIG:
+# Use this CONFIG file for APACHE2:
+
 <VirtualHost zdash.your.domain:80>
 
 ServerAdmin webmaster@localhost

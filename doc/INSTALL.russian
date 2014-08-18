@@ -1,0 +1,112 @@
+HOWTO - in UTF8 coding!!!
+================ Установка ZDASH =================
+
+Мини-ЧтоДаКак на базе Debian 7+
+
+1. Скачать ZDASH, одним из методов 1a или 1b:
+
+1a. Скачать ZDASH GIT способ:
+
+mkdir -p /var/www/zdash
+git clone https://github.com/zubbilo/zdash /var/www/zdash
+cd /var/www/zdash
+chmod 777 logs
+chmod a+x reload.sh
+
+1b. Скачать ZDASH как zip файл:
+
+wget --no-check-certificate -O /tmp/zdash.zip https://github.com/zubbilo/zdash/archive/master.zip
+unzip /tmp/zdash.zip -d /tmp
+mv /tmp/zdash-master /var/www/zdash
+cd /var/www/zdash
+chmod 777 logs
+chmod a+x reload.sh
+
+
+2. Конфигурирование ZDASH
+
+Все настройки в файле /var/www/zdash/zdash/settings.py
+
+Не забудьте создать пользователя в Zabbix сервере для панели ZDASH
+
+В большинстве случаев вам понадобится изменить лишь 3 переменных:
+* ZDASH_URL
+* DELAY
+* ZABBIX
+
+
+3. Установка зависимостей
+
+apt-get install git rsync python python-django python-flup
+
+Установить zabbix_api: https://github.com/gescheit/scripts/tree/master/zabbix
+или
+Просто скопировать в директорию ZDASH в папку zdash:
+wget --no-check-certificate -O /var/www/zdash/zdash/zabbix_api.py https://raw.githubusercontent.com/gescheit/scripts/master/zabbix/zabbix_api.py
+
+4. Выбрать один из серверов HTTP для ZDASH:
+
+4a. Запуск на HTTP сервере NGINX:
+
+apt-get install nginx-light
+(Минимально требуется nginx-light)
+
+Проверить содержимое файла EXAMPLE.nginx и изменить под свои нужды (путь к zdash).
+Переименовать файл и скопировать в nginx конфиги, в большинстве случаев в: /etc/nginx/sites-enabled
+Перезапустить nginx.
+
+Проверить содержимое файла restart.sh.
+Удалить строки, начинающиеся с "echo" и "exit". Затем раскомментировать 2 последние строки изменяя
+пути к zdash и TCP порт на котором вы хотите его запускать.
+Запустить файл reload.sh. Проверить что FCGI сервер работает:
+
+ps wax |grep "port=8099"
+
+
+4b. Запуск на HTTP сервере APACHE
+
+apt-get install apache2 apache2-mpm-worker libapache2-mod-wsgi
+a2enmod wsgi
+apache2ctl restart
+chown -R www-data:www-data /var/www/zdash
+
+Проверить содержимое django.fcgi и исправить пути к zdash
+
+Проверить содержиое файла EXAMPLE.apache и изменить под свои нужды.
+Переименовать файл EXAMPLE.apache и спопировать в apache конфиги, в большинстве случаев в: /etc/apache2/sites-enabled
+Перезапустить apache.
+
+
+5. Открыть браузер и перейти на адрес, который вы указывали при настройке HTTP сервера. Например: http://zdash.your.domain/
+
+
+==================== Патчи для ZABBIX GUI ======================
+
+Смотрите скриншот, изменённого Zabbix GUI:
+https://raw.githubusercontent.com/zubbilo/zdash/master/doc/Zabbix_GUI_patch.png
+
+Для модификации Zabbix GUI на стринце acnowledge вам потребуется применить патч в зависимости от версии Zabbix SRV.
+
+Например для Zabbix SRV 2.2+:
+# cp acknow.php_v2.2.patch /path/to/zabbix-php-gui/
+# cd /path/to/zabbix-php-gui
+# patch < acknow.php_v2.2.patch
+
+Перейдите на страницу подтверждения события для проверки изменений:
+http://zabbix.your.domain/acknow.php?eventid=XXXXXX&triggerid=XXXXXX
+
+
+==================== Дополнительные изменения =====================
+
+1. По умолчанию отображаются ВСЕ без исключения триггеры во всех группах. Для фильтрации по hostgroups
+проверьте следующие строки в файле actins.py :
+
+# Example of filtering TrigerIDs list, based on HostGroupNames: ALL_servers, ALL_routers, ALL_etc...
+# Feel free to write here Your own filter.
+#           if g['groups']:
+#               groups = [grp['name'] for grp in g['groups']]
+#               selectedgrp = [grp for grp in groups if grp.startswith('ALL')]
+#               if len(selectedgrp) == 0: continue
+
+В данном примере будет отображены все триггеры узлов, которые находятся в группах, имена которых начинаются на ALL....
+Используйте данную структуру для создания вашего собственного фильтра. Учтите, что эта структура используется дважды в actions.py.
